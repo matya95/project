@@ -2,6 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @extends('layouts.layout')
 @section('content')
+    @if($errors->any())
+        <div class="alert alert-success">
+            <ul>
+                <span class="m-auto">{{$errors->first()}}</span>
+            </ul>
+        </div>
+        <h4></h4>
+    @endif
 
     <div class="container">
         <ul className="list-group">

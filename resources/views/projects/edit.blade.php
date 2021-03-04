@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 @section('content')
     <div class="container">
-        {{Form::open(['route' => 'projects.store'])}}
+        {{Form::open(['route' => ['projects.update',$project->id],'method'=>'Post'])}}
         <div class="row">
             <div class="col-md-6">
                 <h1>Projekt adatai</h1>
@@ -28,6 +28,7 @@
                 </div>
             </div>
         </div>
+        {{Form::hidden('_method','PUT')}}
         {{Form::submit('Küldés!',['class'=>'btn btn-primary mt-4'])}}
     </div>
 @endsection

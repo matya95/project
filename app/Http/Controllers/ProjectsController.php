@@ -53,7 +53,7 @@ class ProjectsController extends Controller
 
         }
 
-        return redirect(route('projects.index'));
+        return redirect(route('projects.index'))->withErrors(['msg', 'Projekt Sikeresen létrehozva']);
     }
 
     /**
@@ -77,7 +77,7 @@ class ProjectsController extends Controller
     {
         $project = Project::find($id);
         $contacters = Contacter::where('project_id', $id)->get();
-        return view('projects.edit')->with(compact('project','contacters'));
+        return view('projects.edit')->with(compact('project', 'contacters'));
     }
 
     /**
@@ -90,11 +90,13 @@ class ProjectsController extends Controller
     public function update(Request $request, $id)
     {
         $project = Project::updateOrCreate(
-            ['id'=>$id],
+            ['id' => $id],
             ['name' => $request->name, 'description' => $request->description],
             ['status' => $request->status]
         );
-        return redirect(route('projects.index'));
+
+        $changes = $project->getChanges();
+        return redirect(route('projects.index'))->withErrors(['msg', 'Projekt Sikeresen frissítve']);
     }
 
     /**
