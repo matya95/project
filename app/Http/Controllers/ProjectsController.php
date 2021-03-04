@@ -15,11 +15,16 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        if (!empty($_GET['filter']) && $_GET['filter'] != "all") {
-            $filtered = $_GET['filter'];
+        if (count($_GET) > 0) {
+            if (count($_GET['filter']) > 0 && $_GET['filter'] != "all") {
+                $filtered = $_GET['filter'];
 
-            $projects = Project::with('contacters')->where('status', $filtered)->paginate(10)->items();
-        } elseif ($_GET['filter'] == 'all' || empty($_GET['filter'])) {
+                $projects = Project::with('contacters')->where('status', $filtered)->paginate(10)->items();
+            } elseif ($_GET['filter'] == 'all' || empty($_GET['filter'])) {
+
+                $projects = Project::with('contacters')->paginate(10)->items();
+            }
+        } else {
 
             $projects = Project::with('contacters')->paginate(10)->items();
         }
@@ -102,6 +107,18 @@ class ProjectsController extends Controller
             ['name' => $request->name, 'description' => $request->description],
             ['status' => $request->status]
         );
+        $contacters = Contacter::where('project_id', $id)->delete();
+        $contactername = $request->names;
+        $contacteremail = $request->email;
+
+        for ($i = 0; $i < count($contactername); $i++) {
+            $contacter = new Contacter();
+            $contacter->name = $contactername[$i];
+            $contacter->email = $contacteremail[$i];
+            $contacter->project_id = $project->id;
+            $contacter->save();
+
+        }
 
         $changes = $project->getChanges();
         return redirect(route('projects.index'))->withErrors(['msg', 'Projekt Sikeresen frissítve']);
