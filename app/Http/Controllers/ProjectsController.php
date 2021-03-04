@@ -15,7 +15,15 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('contacters')->paginate(10)->items();
+        if (!empty($_GET['filter']) && $_GET['filter'] != "all") {
+            $filtered = $_GET['filter'];
+
+            $projects = Project::with('contacters')->where('status', $filtered)->paginate(10)->items();
+        } elseif ($_GET['filter'] == 'all' || empty($_GET['filter'])) {
+
+            $projects = Project::with('contacters')->paginate(10)->items();
+        }
+
         return view('welcome')->with('projects', $projects);
     }
 

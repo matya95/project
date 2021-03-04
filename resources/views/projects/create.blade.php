@@ -10,7 +10,7 @@
                 {{Form::label('description', 'Leírás')}}
                 {{Form::textarea('description','',['class'=>'form-control','required'])}}
                 {{Form::label('description', 'Státusz')}}
-                {{Form::select('status', ['not dev'=>'Fejlesztésre vár', 'developing' => 'Folyamatban','ready'=>'kész'],null,['class'=>'form-control'])}}
+                {{Form::select('status', ['not_dev'=>'Fejlesztésre vár', 'developing' => 'Folyamatban','ready'=>'kész'],null,['class'=>'form-control'])}}
 
             </div>
             <div class="col-md-6">

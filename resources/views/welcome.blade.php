@@ -2,6 +2,23 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 @extends('layouts.layout')
 @section('content')
+    <div class="container mb-5">
+        <div class="filter float-right">
+            <form method="get">
+
+                <select class="form-control" name="filter" onchange="this.form.submit()">
+                <option value="all">Szűrés</option>
+                <option value="all">Összes</option>
+                <option value="not_dev">Fejlesztésre vár</option>
+                <option value="developing">Fejlesztés alatt</option>
+                <option value="ready">Kész</option>
+
+                </select>
+
+            </form>
+
+        </div>
+    </div>
     @if($errors->any())
         <div class="alert alert-success">
             <ul>
@@ -12,6 +29,7 @@
     @endif
 
     <div class="container">
+        <a href="{{route('projects.create')}}" class="btn btn-success float-right mb-5">Projekt létrehozása</a>
         <ul className="list-group">
             @foreach($projects as $project)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
