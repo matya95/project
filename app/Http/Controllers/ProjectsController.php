@@ -41,6 +41,7 @@ class ProjectsController extends Controller
        $project->description=$request->description;
        $project->status=$request->status;
        $project->save();
+       return redirect(route('projects.index'));
     }
 
     /**
