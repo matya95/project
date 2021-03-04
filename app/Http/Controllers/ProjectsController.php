@@ -37,11 +37,10 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        $project = new Project();
-        $project->name = $request->name;
-        $project->description = $request->description;
-        $project->status = $request->status;
-        $project->save();
+        $project = Project::updateOrCreate(
+            ['name' => $request->name, 'description' => $request->description],
+            ['status' => $request->status]
+        );
         $contactername = $request->names;
         $contacteremail = $request->email;
 
@@ -77,7 +76,8 @@ class ProjectsController extends Controller
     public function edit($id)
     {
         $project = Project::find($id);
-        return view('projects.edit')->with('project', $project);
+        $contacters = Contacter::where('project_id', $id)->get();
+        return view('projects.edit')->with(compact('project','contacters'));
     }
 
     /**
@@ -89,11 +89,12 @@ class ProjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $project = Project::find($id);
-        $project->name = $request->name;
-        $project->description = $request->description;
-        $project->status = $request->status;
-        $project->save();
+        $project = Project::updateOrCreate(
+            ['id'=>$id],
+            ['name' => $request->name, 'description' => $request->description],
+            ['status' => $request->status]
+        );
+        return redirect(route('projects.index'));
     }
 
     /**

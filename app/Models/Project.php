@@ -9,6 +9,7 @@ class Project extends Model
 {
     use HasFactory;
     public $timestamps=false;
+    protected $fillable = ['name','description','status'];
     public function contacters(){
         return $this->hasMany(Contacter::class);
     }

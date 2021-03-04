@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contacter extends Model
 {
+
     use HasFactory;
     public $timestamps=false;
+    protected $fillable=['name','email'];
 }
