@@ -7,11 +7,35 @@
             @foreach($projects as $project)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{$project->name}}
-                    <a href="/projects/<?=$project->id?>/edit">
+                    <div class="actions f-left">
+                   <a href="{{$project->id}}/edit" class="btn btn-primary">Szerkesztés</a>
+                   <a class="btn btn-danger" onclick="deleteproj({{$project->id}},this)">Törlés</a>
+                    </div>
                 </li>
             @endforeach
         </ul>
     </div>
+<script>
+    function deleteproj(id,element){
+        let removelement=element.parentElement.parentElement;
+        $.ajax({
+            url: '/projects/'+id,
+            type: 'DELETE',
+            async: false,
+            data:{
+                'id': id,
+                '_token': '{{ csrf_token() }}',
+            },
+            success: function () {
+               removelement.remove();
+            },
+            error: function (xhr) {
+                console.log("asd");
+            }
+        });
 
+    }
+</script>
 @endsection
 </html>
+

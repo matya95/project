@@ -15,7 +15,7 @@
                 <a class="nav-link" href="#">Projects <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/create">Link</a>
+                <a class="nav-link" href="{{route('projects.create')}}">Link</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

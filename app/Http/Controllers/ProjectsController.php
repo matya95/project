@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contacter;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,8 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects=Project::with('contacters')->paginate(10)->items();
-       return view('welcome')->with('projects',$projects);
+        $projects = Project::with('contacters')->paginate(10)->items();
+        return view('welcome')->with('projects', $projects);
     }
 
     /**
@@ -31,23 +32,35 @@ class ProjectsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-       $project=new Project();
-       $project->name=$request->name;
-       $project->description=$request->description;
-       $project->status=$request->status;
-       $project->save();
-       return redirect(route('projects.index'));
+        $project = new Project();
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->status = $request->status;
+        $project->save();
+        $contactername = $request->names;
+        $contacteremail = $request->email;
+
+        for ($i = 0; $i < count($contactername); $i++) {
+            $contacter = new Contacter();
+            $contacter->name = $contactername[$i];
+            $contacter->email = $contacteremail[$i];
+            $contacter->project_id = $project->id;
+            $contacter->save();
+
+        }
+
+        return redirect(route('projects.index'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -58,39 +71,42 @@ class ProjectsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $project=Project::find($id);
-        return view('projects.edit')->with('project',$project);
+        $project = Project::find($id);
+        return view('projects.edit')->with('project', $project);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-       $project=Project::find($id);
-        $project->name=$request->name;
-        $project->description=$request->description;
-        $project->status=$request->status;
+        $project = Project::find($id);
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->status = $request->status;
         $project->save();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $project = Project::find($id);
+        $contacters = Contacter::where('project_id', $id);
+        $contacters->delete();
+        $project->delete();
     }
 }
