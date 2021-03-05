@@ -10,7 +10,7 @@
                 <option value="all">Szűrés</option>
                 <option value="all">Összes</option>
                 <option value="not_dev">Fejlesztésre vár</option>
-                <option value="developing">Fejlesztés alatt</option>
+                <option value="developing">Folyamatban</option>
                 <option value="ready">Kész</option>
 
                 </select>
@@ -29,11 +29,17 @@
     @endif
 
     <div class="container">
+        <div class="row w-100">
         <a href="{{route('projects.create')}}" class="btn btn-success float-right mb-5">Projekt létrehozása</a>
-        <ul className="list-group">
+        </div>
+       <div class="row"> <ul class="list-group w-100">
+               @if(count($projects)>0)
             @foreach($projects as $project)
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     {{$project->name}}
+                    <div class="status">
+                        {{__($project->status)}}
+                    </div>
                     <div class="numbers">
                         {{count($project->contacters)}}Kapcsolattartó
                     </div>
@@ -43,7 +49,12 @@
                     </div>
                 </li>
             @endforeach
+                   @else
+                   <span>Nins egyetlen projekt sem</span>
+                   @endif
         </ul>
+        </div>
+        {{ $projects->links("pagination::bootstrap-4") }}
     </div>
 <script>
     function deleteproj(id,element){

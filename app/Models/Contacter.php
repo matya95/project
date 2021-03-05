@@ -11,4 +11,9 @@ class Contacter extends Model
     use HasFactory;
     public $timestamps=false;
     protected $fillable=['name','email'];
+
+    public static function getContactersByPid($id){
+       $contacters= Contacter::where('project_id', $id)->get();
+        return $contacters;
+    }
 }

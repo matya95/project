@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Changed;
 use App\Models\Contacter;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectsController extends Controller
 {
@@ -15,18 +17,18 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        if (count($_GET) > 0) {
-            if (count($_GET['filter']) > 0 && $_GET['filter'] != "all") {
+        if (!empty($_GET) && empty($_GET['page'])) {
+            if ($_GET['filter'] != "all") {
                 $filtered = $_GET['filter'];
 
-                $projects = Project::with('contacters')->where('status', $filtered)->paginate(10)->items();
+                $projects = Project::with('contacters')->where('status', $filtered)->paginate(10);
             } elseif ($_GET['filter'] == 'all' || empty($_GET['filter'])) {
 
-                $projects = Project::with('contacters')->paginate(10)->items();
+                $projects = Project::with('contacters')->paginate(10);
             }
         } else {
 
-            $projects = Project::with('contacters')->paginate(10)->items();
+            $projects = Project::with('contacters')->paginate(10);
         }
 
         return view('welcome')->with('projects', $projects);
@@ -66,7 +68,7 @@ class ProjectsController extends Controller
 
         }
 
-        return redirect(route('projects.index'))->withErrors(['msg', 'Projekt Sikeresen létrehozva']);
+        return redirect(route('projects.index'))->withErrors(['Projekt Sikeresen létrehozva']);
     }
 
     /**
@@ -104,24 +106,35 @@ class ProjectsController extends Controller
     {
         $project = Project::updateOrCreate(
             ['id' => $id],
-            ['name' => $request->name, 'description' => $request->description],
-            ['status' => $request->status]
+            ['name' => $request->name, 'description' => $request->description,'status' => $request->status]
         );
         $contacters = Contacter::where('project_id', $id)->delete();
         $contactername = $request->names;
         $contacteremail = $request->email;
 
-        for ($i = 0; $i < count($contactername); $i++) {
-            $contacter = new Contacter();
-            $contacter->name = $contactername[$i];
-            $contacter->email = $contacteremail[$i];
-            $contacter->project_id = $project->id;
-            $contacter->save();
+        $changes = $project->getChanges();
+        if (!empty($contactername)) {
+            $addresses = [];
+            for ($i = 0; $i < count($contactername); $i++) {
+                $contacter = new Contacter();
+                $contacter->name = $contactername[$i];
+                $contacter->email = $contacteremail[$i];
+                $contacter->project_id = $project->id;
+                $contacter->save();
+                $string = "";
+                for ($j = 0; $j < count($changes); $j++) {
+                    $index = array_keys($changes)[$j];
+                    $string .= $index . ':' . $changes[$index] . '<br>';
 
+
+                }
+                array_push($addresses, $contacteremail[$i]);
+
+            }
+            Mail::to($addresses)->send(new Changed($string));
         }
 
-        $changes = $project->getChanges();
-        return redirect(route('projects.index'))->withErrors(['msg', 'Projekt Sikeresen frissítve']);
+        return redirect(route('projects.index'))->withErrors(['Projekt Sikeresen frissítve']);
     }
 
     /**

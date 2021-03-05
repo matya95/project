@@ -13,4 +13,12 @@ class Project extends Model
     public function contacters(){
         return $this->hasMany(Contacter::class);
     }
+    public static function updateproject($request,$id){
+        updateOrCreate(
+            ['id'=>$id],
+            ['name' => $request->name, 'description' => $request->description],
+            ['status' => $request->status]
+        );
+
+    }
 }

@@ -17,9 +17,9 @@
                 <h1>Kapcsolattartók adatai</h1>
                 <div class="contacter">
                     {{Form::label('email', 'Név')}}
-                    {{Form::text('names[]','',['class'=>'form-control'])}}
+                    {{Form::text('names[]','',['class'=>'form-control','required'])}}
                     {{Form::label('email', 'E-mail Cím')}}
-                    {{Form::email('email[]','',['class'=>'form-control'])}}
+                    {{Form::email('email[]','',['class'=>'form-control','required'])}}
                     {{Form::button('Kapcsolattartó hozzáadása',['class'=>'btn btn-primary mt-2','onclick'=>'addcontacter(this)'])}}
                 </div>
             </div>
@@ -36,6 +36,10 @@
            '                    <label for="email">E-mail Cím</label>\n' +
            '                    <input class="form-control" name="email[]" type="email" value="">';
        element.before(elements);
+
+    }
+    function deletecontacter(element) {
+        element.parentElement.remove();
 
     }
 </script>

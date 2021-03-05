@@ -23,7 +23,7 @@
                         {{Form::text('names[]',$ct->name,['class'=>'form-control'])}}
                         {{Form::label('email', 'E-mail Cím')}}
                         {{Form::email('email[]',$ct->email,['class'=>'form-control'])}}
-                        {{Form::button('Kapcsolattartó törlése',['class'=>'btn btn-primary mt-2','onclick'=>'deletecontacter(this)'])}}
+                        {{Form::button('Kapcsolattartó törlése',['class'=>'btn btn-danger mt-2','onclick'=>'deletecontacter(this)'])}}
                         </div>
                     @endforeach
                         {{Form::button('Kapcsolattartó hozzáadása',['class'=>'btn btn-primary mt-2','onclick'=>'addcontacter(this)'])}}
@@ -41,7 +41,8 @@
         elements.innerHTML='  <label for="email">Név</label>\n' +
             '                    <input class="form-control" name="names[]" type="text" value="">\n' +
             '                    <label for="email">E-mail Cím</label>\n' +
-            '                    <input class="form-control" name="email[]" type="email" value="">';
+            '                    <input class="form-control" name="email[]" type="email" value="">' +
+            '<button class="btn btn-danger mt-2" onclick="deletecontacter(this)" type="button">Kapcsolattartó törlése</button>';
         element.before(elements);
 
     }
